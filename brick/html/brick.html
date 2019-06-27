@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>brickMock</title>
+    <link rel="stylesheet" href="../css/brick.css">
+    <script src="../js/hua3.js"></script>
+
+</head>
+<body>
+    <canvas class="class-canvas"></canvas>
+    <script>
+        var canvas = document.querySelector('.class-canvas')
+        var context = canvas.getContext('2d')
+        log(context)
+
+
+        var x = 15
+        var y = 80
+        var img = new Image()
+        img.src = '../images/paddle.png'
+        img.onload = function() {
+            context.drawImage(img,x,y)    
+        }
+
+
+        // addEventListener
+        var leftDown = false
+        var rightDown = false
+        var speed = 10
+
+        window.addEventListener('keydown', function(event) {
+            var k = event.key
+            if(k == 'a') {
+                log('left')
+                leftDown = true
+                // x -= 10
+                // context.clearRect(0,0, canvas.width, canvas.height)
+                // context.drawImage(img,x,y)
+            } else if(k == "d") {
+                log('right')
+                rightDown = true
+                // x += 10
+                // context.clearRect(0,0, canvas.width, canvas.height)
+                // context.drawImage(img,x,y)
+            }
+        })
+
+        window.addEventListener('keyup', function(event) {
+            var k = event.key
+            if(k == 'a') {
+                log('left')
+                leftDown = false
+            } else if(k == "d") {
+                log('right')
+                rightDown = false
+            }
+        })
+
+        setInterval(function() {
+            // 根据按键的是否按下的状态来更新位置
+            if (leftDown) {
+                x -= speed
+            } else if(rightDown) {
+                x += speed
+            }
+            context.clearRect(0,0, canvas.width, canvas.height)
+            context.drawImage(img,x,y)
+        }, 1000/20)
+
+
+
+
+
+    </script>
+</body>
+</html>
