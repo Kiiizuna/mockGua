@@ -38,12 +38,39 @@
        }
 
         var brickGame = function() {
-            var g = {}
+            var g = {
+                actions: {},
+                keydowns: {},
+            }
             var canvas = document.querySelector('.class-canvas')
             var context = canvas.getContext('2d')
             g.canvas = canvas
             g.context = context
+
+            window.addEventListener('keydown', function(event) {
+                g.keydowns[event.key] = true
+            })
+
+            window.addEventListener('keyup', function(event) {
+                g.keydowns[event.key] = false
+            })
+
+            g.registerAction = function(key, callback) {
+                g.actions[key] = callback
+            }
+
             setInterval(function() {
+                //events
+                var actions = Object.keys(g.actions)
+                for (var i = 0; i < actions.length; i++) {
+                    var key = actions[i]
+                    if (g.keydowns[key]) {
+                        // 如果按键被按下, 则调用注册的 action
+                        g.actions[key]()
+                    } 
+                }
+
+
                 // update
                 g.update()
                 // clear
@@ -55,11 +82,17 @@
        }
 
         var __main = function() {
+            var paddle = Paddle()
            
             var game = brickGame()
 
-            var paddle = Paddle()
+            game.registerAction('a', function() {
+                paddle.moveLeft()
+            })
 
+            game.registerAction('d', function() {
+                paddle.moveRight()
+            })
             // var x = 15
             // var y = 80
             // var img = new Image()
@@ -68,51 +101,53 @@
             //     context.drawImage(img,x,y)    
             // }
 
+            // 注册 update
             game.update = function() {
-                if (leftDown) {
-                    // paddle.x -= paddle.speed
-                    paddle.moveLeft()
-                } else if (rightDown) {
-                    // paddle.x += paddle.speed
-                    paddle.moveRight()
-                }
+                // if (leftDown) {
+                //     // paddle.x -= paddle.speed
+                //     paddle.moveLeft()
+                // } else if (rightDown) {
+                //     // paddle.x += paddle.speed
+                //     paddle.moveRight()
+                // }
             }
 
+            // 注册 draw
             game.draw = function() {
                 game.context.drawImage(paddle.image, paddle.x, paddle.y)
             }
             // addEventListener
-            var leftDown = false
-            var rightDown = false
+            // var leftDown = false
+            // var rightDown = false
             // var speed = 10
 
-            window.addEventListener('keydown', function(event) {
-                var k = event.key
-                if(k == 'a') {
-                    log('left')
-                    leftDown = true
-                    // x -= 10
-                    // context.clearRect(0,0, canvas.width, canvas.height)
-                    // context.drawImage(img,x,y)
-                } else if(k == "d") {
-                    log('right')
-                    rightDown = true
-                    // x += 10
-                    // context.clearRect(0,0, canvas.width, canvas.height)
-                    // context.drawImage(img,x,y)
-                }
-            })
+            // window.addEventListener('keydown', function(event) {
+            //     var k = event.key
+            //     if(k == 'a') {
+            //         log('left')
+            //         leftDown = true
+            //         // x -= 10
+            //         // context.clearRect(0,0, canvas.width, canvas.height)
+            //         // context.drawImage(img,x,y)
+            //     } else if(k == "d") {
+            //         log('right')
+            //         rightDown = true
+            //         // x += 10
+            //         // context.clearRect(0,0, canvas.width, canvas.height)
+            //         // context.drawImage(img,x,y)
+            //     }
+            // })
 
-            window.addEventListener('keyup', function(event) {
-                var k = event.key
-                if(k == 'a') {
-                    log('left')
-                    leftDown = false
-                } else if(k == "d") {
-                    log('right')
-                    rightDown = false
-                }
-            })
+            // window.addEventListener('keyup', function(event) {
+            //     var k = event.key
+            //     if(k == 'a') {
+            //         log('left')
+            //         leftDown = false
+            //     } else if(k == "d") {
+            //         log('right')
+            //         rightDown = false
+            //     }
+            // })
 
             setInterval(function() {
                 // 根据按键的是否按下的状态来更新左右位置, 第一次载入已经运行了
